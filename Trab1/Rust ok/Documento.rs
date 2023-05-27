@@ -65,6 +65,14 @@ impl Pagina {
         
         true
     }
+
+    fn update_seq(&mut self) {
+        let mut i = 0;
+        for doc in &mut self.docs {
+            doc.did.seq = 1 ;
+            i += 1;
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -89,6 +97,10 @@ impl SGBD {
 
         sgbd
     }
+
+    // pub fn update_page_id(&mut self, pagina: &mut Pagina) {
+
+    // }
 }
 
 fn formatar_erro(err: String) -> String {
@@ -96,8 +108,8 @@ fn formatar_erro(err: String) -> String {
 }
 
 fn main() {
-    let sgbd = SGBD::new();
-    
+    let mut sgbd = SGBD::new();
+
     // Cria uma nova Página
     let mut pagina = match sgbd.primeira_pagina {
         Some(ref pagina) => (**pagina).clone(),
@@ -106,12 +118,9 @@ fn main() {
             return;
         }
     };
-    
-    println!("Página inicial: {:?}", pagina);
-    println!();
-    
-    // Cria um novo Documento
-    let documento = match Documento::new("Gust") {
+
+    // Cria alguns Documentos de exemplo
+    let documento1 = match Documento::new("AAAA") {
         Ok(doc) => Box::new(doc),
         Err(err) => {
             println!("{}", formatar_erro(err));
@@ -119,17 +128,26 @@ fn main() {
         }
     };
 
-    // Adiciona o Documento à Página
-    let adicionado = pagina.add_documento(documento);
-    
-    println!("Página após adicionar o documento: {:?}", pagina);
-    println!();
-    
-    if adicionado {
-        println!("Documento adicionado com sucesso!");
-    } else {
-        println!("Falha ao adicionar o documento.");
-    }
+    let documento2 = match Documento::new("XXXX") {
+        Ok(doc) => Box::new(doc),
+        Err(err) => {
+            println!("{}", formatar_erro(err));
+            return;
+        }
+    };
 
-    println!("SGBG: {:?}", sgbd);
+    // Adiciona os Documentos à Página
+    pagina.add_documento(documento1.clone());
+    pagina.add_documento(documento2.clone());
+
+    // Antes da atualização
+    println!("Página antes da atualização: {:?}", pagina);
+    println!();
+
+    // Atualiza a sequência dos Documentos na Página
+    pagina.update_seq();
+
+    // Após a atualização
+    println!("Página após a atualização: {:?}", pagina);
+    println!();
 }
