@@ -73,6 +73,15 @@ impl Pagina {
             i += 1;
         }
     }
+
+    fn atualizar_page_id(&mut self, page_id: i32) {
+        for doc in &mut self.docs {
+            doc.did.page_id = page_id;
+        }
+        if let Some(ref mut next) = self.next {
+            next.atualizar_page_id(page_id + 1);
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -150,4 +159,10 @@ fn main() {
     // Após a atualização
     println!("Página após a atualização: {:?}", pagina);
     println!();
+
+    // Atualiza o page_id da Página e seus Documentos
+    pagina.atualizar_page_id(10);
+
+    // Após a atualização do page_id
+    println!("Página após atualizar o page_id: {:?}", pagina);
 }
