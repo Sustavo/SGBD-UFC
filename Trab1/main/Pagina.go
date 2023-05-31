@@ -1,4 +1,4 @@
-package Go
+package main
 
 type Pagina struct {
 	page_id   int
